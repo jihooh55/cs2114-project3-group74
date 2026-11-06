@@ -33,16 +33,15 @@ public class Song {
         return this.genre;
     }
     
-    public String getdurationInSec() {
-        return this.du;
+    public int getDurationInSec() {
+        return this.durationInSec;
     }
     
+    public void setLike(boolean value) {
+        this.like = value;
+    }
     
-    
-    //~ Fields ................................................................
-
-    //~ Constructors ..........................................................
-
-    //~Public  Methods ........................................................
-
+    public boolean getLike() {
+        return this.like;
+    }
 }
