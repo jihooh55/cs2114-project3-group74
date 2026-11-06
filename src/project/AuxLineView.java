@@ -1,5 +1,6 @@
 package project;
-public class LinkedQueue {
+public class AuxLineView {
+
     //~ Fields ................................................................
 
     //~ Constructors ..........................................................
