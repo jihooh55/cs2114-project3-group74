@@ -1,11 +1,11 @@
 package project;
 
 public class Song {
-    private String title;
-    private String artist;
-    private String album;
-    private String genre;
-    private int durationInSec;
+    private final String title;
+    private final String artist;
+    private final String album;
+    private final String genre;
+    private final int durationInSec;
     private boolean like;
     
     public Song(String title, String artist, String album, String genre, int durationInSec) {
