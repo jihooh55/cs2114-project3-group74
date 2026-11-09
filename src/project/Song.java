@@ -8,6 +8,15 @@ public class Song {
     private final int durationInSec;
     private boolean like;
     
+    public Song(String title) {
+        this.title = title;
+        this.artist = null;
+        this.album = null;
+        this.genre = null;
+        this.durationInSec = 0;
+        this.like = false;
+    }
+    
     public Song(String title, String artist, String album, String genre, int durationInSec) {
         this.title = title;
         this.artist = artist;
