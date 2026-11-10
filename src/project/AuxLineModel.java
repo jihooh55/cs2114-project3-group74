@@ -12,6 +12,13 @@ public class AuxLineModel {
         songQueue.enqueue(newSong);
     }
     
+    public Song viewFirst() {
+        return songQueue.getFirst().getData();
+    }
+    
+    public Song pop() {
+        return songQueue.dequeue().getData();
+    }
     
     //~ Fields ................................................................
 
