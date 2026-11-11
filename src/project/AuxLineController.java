@@ -28,4 +28,12 @@ public class AuxLineController {
         model.addToQueue(song);
     }
 
+    public Song playNext() {
+        return model.playNext();
+    }
+
+    public Song getCurrentSong() {
+        return model.getCurrentSong();
+    }
+
 }

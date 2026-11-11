@@ -21,11 +21,14 @@ public class AuxLineView {
                     addSong();
                     break;
                 case "2":
+                    playNext();
+                    break;
                 case "3":
                     System.out.println("This option is not available yet.");
                     break;
                 default:
-                    System.out.println("Invalid choice. Enter 1 to add a song.");
+                    System.out.println(
+                        "Invalid choice. Enter 1 to add a song or 2 to play next.");
                     break;
             }
         }
@@ -93,8 +96,18 @@ public class AuxLineView {
         return readUserInput();
     }
     
+    private static void playNext() {
+        if (controller.playNext() == null) {
+            System.out.println("Queue is empty. Add a song first.");
+            return;
+        }
+        displayNowPlaying();
+    }
+
     private static void displayNowPlaying() {
-        
+        Song song = controller.getCurrentSong();
+        System.out.println("Now playing: " + song.getTitle() + " by "
+            + song.getArtist() + " (" + song.getDurationInSec() + " seconds)");
     }
     
     private static void displayErrorMessage() {

@@ -19,6 +19,19 @@ public class AuxLineModel {
     public Song pop() {
         return songQueue.dequeue().getData();
     }
+
+    /** Advances to the next queued song, preserving the current song if empty. */
+    public Song playNext() {
+        if (songQueue.size() == 0) {
+            return null;
+        }
+        currentSong = pop();
+        return currentSong;
+    }
+
+    public Song getCurrentSong() {
+        return currentSong;
+    }
     
     //~ Fields ................................................................
 
