@@ -1,4 +1,7 @@
 package project;
+
+import java.util.List;
+
 public class AuxLineController {
     AuxLineModel model;
     
@@ -34,6 +37,10 @@ public class AuxLineController {
 
     public Song getCurrentSong() {
         return model.getCurrentSong();
+    }
+
+    public List<Song> getQueuedSongs() {
+        return model.getQueuedSongs();
     }
 
 }

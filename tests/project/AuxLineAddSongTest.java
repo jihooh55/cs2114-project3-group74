@@ -107,8 +107,8 @@ public class AuxLineAddSongTest {
             + "1\n \nArtist\n\n\n180\n"
             + "1\nValid\nArtist\nAlbum\nRock\n120\n");
         check(output.contains("Invalid choice."), "Invalid menu choice is handled");
-        check(output.contains("This option is not available yet."),
-            "Deferred menu options are handled");
+        check(output.contains("Queue is empty. Add a song first."),
+            "Viewing an empty queue is handled");
         check(consoleModel().songQueue.size() == 1,
             "A valid request succeeds after rejected input");
         check("Valid".equals(consoleModel().viewFirst().getTitle()),

@@ -1,4 +1,5 @@
 package project;
+import java.util.List;
 import java.util.Scanner;
 
 public class AuxLineView {
@@ -24,11 +25,15 @@ public class AuxLineView {
                     playNext();
                     break;
                 case "3":
-                    System.out.println("This option is not available yet.");
+                    viewQueue();
+                    break;
+                case "4":
+                    on = false;
+                    System.out.println("Goodbye!");
                     break;
                 default:
                     System.out.println(
-                        "Invalid choice. Enter 1 to add a song or 2 to play next.");
+                        "Invalid choice. Enter 1, 2, 3, or 4.");
                     break;
             }
         }
@@ -44,7 +49,8 @@ public class AuxLineView {
         System.out.println("-----OPTIONS-----");
         System.out.println("1. Add a song to queue");
         System.out.println("2. Play next song in queue");
-        System.out.println("3. ");
+        System.out.println("3. View queue");
+        System.out.println("4. Exit");
     }
     
     private static String readUserInput() {
@@ -108,6 +114,21 @@ public class AuxLineView {
         Song song = controller.getCurrentSong();
         System.out.println("Now playing: " + song.getTitle() + " by "
             + song.getArtist() + " (" + song.getDurationInSec() + " seconds)");
+    }
+
+    private static void viewQueue() {
+        List<Song> songs = controller.getQueuedSongs();
+        if (songs.isEmpty()) {
+            System.out.println("Queue is empty. Add a song first.");
+            return;
+        }
+        System.out.println("Queued songs:");
+        for (int i = 0; i < songs.size(); i++) {
+            Song song = songs.get(i);
+            System.out.println((i + 1) + ". " + song.getTitle() + " by "
+                + song.getArtist() + " (" + song.getDurationInSec()
+                + " seconds)");
+        }
     }
     
     private static void displayErrorMessage() {
