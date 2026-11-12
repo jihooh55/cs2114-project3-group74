@@ -36,6 +36,9 @@ public class AuxLineController {
     }
 
     public Song getCurrentSong() {
+        if (model.getCurrentSong() == null) {
+            throw new NullPointerException("The queue is empty");
+        }
         return model.getCurrentSong();
     }
 

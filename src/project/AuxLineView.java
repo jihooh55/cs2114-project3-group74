@@ -19,21 +19,24 @@ public class AuxLineView {
             }
             switch (choice.trim()) {
                 case "1":
-                    addSong();
+                    displayNowPlaying();
                     break;
                 case "2":
-                    playNext();
+                    addSong();
                     break;
                 case "3":
-                    viewQueue();
+                    playNext();
                     break;
                 case "4":
+                    viewQueue();
+                    break;
+                case "5":
                     on = false;
                     System.out.println("Goodbye!");
                     break;
                 default:
                     System.out.println(
-                        "Invalid choice. Enter 1, 2, 3, or 4.");
+                        "Invalid choice. Enter 1,2,3,4,5.");
                     break;
             }
         }
@@ -47,10 +50,11 @@ public class AuxLineView {
     
     private static void displayMenu() {
         System.out.println("-----OPTIONS-----");
-        System.out.println("1. Add a song to queue");
-        System.out.println("2. Play next song in queue");
-        System.out.println("3. View queue");
-        System.out.println("4. Exit");
+        System.out.println("1. View the currently playing song");
+        System.out.println("2. Add a song to queue");
+        System.out.println("3. Play next song in queue");
+        System.out.println("4. View queue");
+        System.out.println("5. Exit");
     }
     
     private static String readUserInput() {
@@ -63,38 +67,56 @@ public class AuxLineView {
 
     private static void addSong() {
         String title = prompt("Song title (required):");
-        if (title == null) {
-            return;
+        while (title.isEmpty()) {
+            System.out.println("Song title cannot be empty");
+            title = prompt("Song title (required):");
         }
         String artist = prompt("Artist (required):");
-        if (artist == null) {
-            return;
+        while (artist.isEmpty()) {
+            System.out.println("Artist name cannot be empty");
+            artist = prompt("Artist (required):");
         }
         String album = prompt("Album (optional):");
-        if (album == null) {
-            return;
-        }
-        String genre = prompt("Genre (optional):");
-        if (genre == null) {
-            return;
-        }
+        
+        String genre = prompt("Genre (optional):");       
+      
+        int durationInSec = 0;
+        boolean canProceed = false;
+        
         String duration = prompt("Duration in seconds (required):");
-        if (duration == null) {
-            return;
-        }
+        
+        while (canProceed == false) {
+            canProceed = true;
+            if (duration.isEmpty()) {
+                canProceed = false;
+                System.out.println("Duration cannot be empty");
+            }
+            else {
+                try {
+                    durationInSec = Integer.parseInt(duration.trim());
+                }
+                catch (NumberFormatException e) {
+                    canProceed = false;
+                    System.out.println(
+                        "Duration must be a positive whole number of seconds. Please enter a valid duration.");
+                }
+                if (durationInSec <= 0) {
+                    canProceed = false;
+                    System.out.println(
+                        "Duration must be a positive whole number of seconds. Please enter a valid duration.");
+                }
+            }
+            if (canProceed == false) {
+                duration = prompt("Duration in seconds (required):");
+            }
+            else {
 
-        try {
-            int durationInSec = Integer.parseInt(duration.trim());
-            controller.addSong(title, artist, album, genre, durationInSec);
-            System.out.println("Song added to queue.");
+                durationInSec = Integer.parseInt(duration.trim());
+            }
         }
-        catch (NumberFormatException e) {
-            System.out.println(
-                "Duration must be a positive whole number of seconds.");
-        }
-        catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        
+        controller.addSong(title, artist, album, genre, durationInSec);
+        System.out.println("Song added to queue successfully.");
     }
 
     private static String prompt(String message) {
@@ -111,7 +133,15 @@ public class AuxLineView {
     }
 
     private static void displayNowPlaying() {
-        Song song = controller.getCurrentSong();
+        Song song;
+        try {
+            song = controller.getCurrentSong();
+        }
+        catch (NullPointerException e) {
+            System.out.println("No song is being played currently.");
+            return;
+        }
+        song = controller.getCurrentSong();
         System.out.println("Now playing: " + song.getTitle() + " by "
             + song.getArtist() + " (" + song.getDurationInSec() + " seconds)");
     }
@@ -130,17 +160,5 @@ public class AuxLineView {
                 + " seconds)");
         }
     }
-    
-    private static void displayErrorMessage() {
-        
-    }
-    
-    
-
-    //~ Fields ................................................................
-
-    //~ Constructors ..........................................................
-
-    //~Public  Methods ........................................................
 
 }
