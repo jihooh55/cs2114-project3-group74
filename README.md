@@ -164,13 +164,13 @@ Yes. We can create an `AuxLineModel`, add songs, and call `playNext()` without o
 | `src/project/Song.java` | Jiho Oh | Wrote and updated the class that stores song details. |
 | `src/project/Node.java` | Jiho Oh | Wrote and updated the node class used by the linked queue. |
 | `src/project/SongQueue.java` | Jiho Oh | Wrote and revised the linked queue methods for adding and removing songs. |
-| `src/project/AuxLineModel.java` | Jiho Oh, Oscar Chen | Jiho worked on the initial model. Oscar added Play Next and access to the waiting list. |
+| `src/project/AuxLineModel.java` | Jiho Oh, Oscar Chen, Nolan Ayodeji | Jiho worked on the initial model. Oscar added Play Next and access to the waiting list. |
 | `src/project/AuxLineController.java` | Jiho Oh, Oscar Chen | Jiho worked on the initial controller. Oscar added methods to handle song requests, advance playback, and retrieve the queue. |
-| `src/project/AuxLineView.java` | Jiho Oh, Oscar Chen | Jiho revised the Now Playing display. Oscar added and updated menu options for adding songs, playing the next song, and viewing the queue. |
-| `src/project/SongQueueTest.java` | Jiho Oh | Wrote tests for enqueue, dequeue, and dequeuing from an empty queue. |
-| `tests/project/AuxLineAddSongTest.java` | Oscar Chen | Wrote checks for adding songs and rejecting invalid song details. |
-| `tests/project/AuxLinePlayNextTest.java` | Oscar Chen | Wrote checks for advancing through songs in order and handling an empty queue. |
-| `tests/project/AuxLineQueueAndExitTest.java` | Oscar Chen | Wrote checks for viewing the waiting queue and exiting the console. |
+| `src/project/AuxLineView.java` | Jiho Oh, Oscar Chen, Nolan Ayodeji | Jiho revised the Now Playing display. Oscar added and updated menu options for adding songs, playing the next song, and viewing the queue. |
+| `src/project/SongQueueTest.java` | Jiho Oh, Enoch Shum | Wrote tests for enqueue, dequeue, and dequeuing from an empty queue. Enoch tested in a local environment and ensured all cases passed. |
+| `tests/project/AuxLineAddSongTest.java` | Oscar Chen, Enoch Shum | Wrote checks for adding songs and rejecting invalid song details. |
+| `tests/project/AuxLinePlayNextTest.java` | Oscar Chen, Nolan Ayodeji | Wrote checks for advancing through songs in order and handling an empty queue. |
+| `tests/project/AuxLineQueueAndExitTest.java` | Oscar Chen, Enoch Shum | Wrote checks for viewing the waiting queue and exiting the console. |
 
 ### GenAI note
 
