@@ -67,7 +67,7 @@ public class AuxLineView {
 
     private static void addSong() {
         String title = prompt("Song title (required):");
-        while (title.isEmpty()) {
+        while (title != null && title.trim().isEmpty()) {
             System.out.println("Song title cannot be empty");
             title = prompt("Song title (required):");
         }
