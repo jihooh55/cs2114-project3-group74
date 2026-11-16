@@ -28,7 +28,34 @@ public class AuxLineController {
         Song song = new Song(title.trim(), artist.trim(),
             album == null ? "" : album.trim(),
             genre == null ? "" : genre.trim(), durationInSec);
+        
+        List<Song> likedSongs = model.getLikedSongs();
+        for (int i = 0; i < likedSongs.size(); i ++) {
+            if (song.equals(likedSongs.get(i))) {
+                model.addToQueue(likedSongs.get(i));
+                return;
+            }
+        }
+        
+        Song current = model.getCurrentSong();
+        if (current != null && current.equals(song)) {
+            model.addToQueue(current);
+            return;
+        }
+        
+        List<Song> songQueue = model.getQueuedSongs();
+        for (int i = 0; i < songQueue.size(); i++) {
+            if (songQueue.get(i).equals(song)) {
+                model.addToQueue(songQueue.get(i));
+                return;
+            }
+        }
+        
         model.addToQueue(song);
+    }
+    
+    public List<Song> getLikedSongs() {
+        return model.getLikedSongs();
     }
 
     public Song playNext() {
@@ -44,6 +71,10 @@ public class AuxLineController {
 
     public List<Song> getQueuedSongs() {
         return model.getQueuedSongs();
+    }
+    
+    public void likeSong(Song song, boolean like) {
+        model.likeSong(song, like);
     }
 
 }
