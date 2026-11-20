@@ -79,79 +79,55 @@ The 100-character field limit and the 100-request queue limit are still pending.
 
 ## Reflection
 
-### What changed from the specification?
+### What changed from the specification & D3 Plan?
+- **Feature Switch:** In D3, we planned to build "Save and restore the session." We decided to switch our Deliverable 4 change feature to **"Like a Song"** instead. This allowed us to focus on successfully managing concurrent lists (the main queue vs. the liked songs list) and interactive state changes before tackling file I/O.
+- **Classes:** We kept the six main classes and put `main()` in `AuxLineView`. 
+- **Method signatures:** The controller uses `addSong()`. The model uses `playNext()`, which returns the song that just became current or `null` if empty.
+- **Where validation lives:** The view handles text input and asks again for blank fields or invalid durations. The controller also checks required fields before creating a song.
 
-- **Classes:** We kept the six main classes and put `main()` in `AuxLineView`. That gave us a simple way to start the console without adding a separate launcher.
-- **Method signatures:** The controller uses `addSong(String title, String artist, String album, String genre, int durationInSec)`. The model uses `playNext()`, which returns the song that just became current. If the queue is empty, it returns `null` so the view can show a message while the model keeps the current song.
-- **Where validation lives:** The view handles text input and asks again for blank required fields or an invalid duration. The controller checks the required fields and duration before creating a song. This lets the console explain the problem while also giving the controller its own checks.
-- **Test cases:** `SongQueueTest` checks enqueue, dequeue, and what happens when you dequeue from an empty queue. We also added standalone tests for Add Song, Play Next, viewing the queue, and exiting so we could check the console flow.
-- **Scope:** We built Play Next first because it shows how the queue works. Play/Pause, Seek, and Like are still open. The prototype asks for optional album and genre fields, and we still need to add requester names.
+### How did your design absorb the change? (D3 Prediction vs. Reality)
+To implement the "Like" feature, we touched `Song`, `AuxLineModel`, `AuxLineController`, and `AuxLineView`. 
+- **What matched:** As predicted in our general architecture, the structural queue classes (`Node` and `SongQueue`) did not have to change at all to support this new feature. We successfully preserved their isolation. 
+- **What surprised us:** We initially assumed we wouldn't need to change `Song`, but we ended up adding a `like` boolean field to it.
 
-### Did the model really stand alone?
+### Did the change cross the model/view line?
+No, the boundary was respected. The `AuxLineView` learned how to display the "🤍/🖤" status, but it does not modify the data directly. It strictly calls `controller.likeSong()` and `controller.getLikedSongs()`. If a change rippled, it was purely routing the request safely down to the `AuxLineModel`.
 
-Yes. We can create an `AuxLineModel`, add songs, and call `playNext()` without opening the console or creating a controller. The model keeps track of the waiting queue and the current song. The view handles prompts and messages.
-
-### What happened to our unknowns?
-
-| Unknown (from Scope) | Status | Notes |
-|---|---|---|
-| How do we refresh the interface after queue changes without putting queue logic in the view? | Solved for the console | The view asks the controller for the current song or waiting list when it needs to display them. |
-| How do we test transitions between empty, one-request, and multiple-request queues? | Tested manually | We added two songs, played both in order, and then hit Play Next again. The last song stayed current. |
-| For save/restore, how do we keep request order and handle a missing or damaged file? | Open | We plan to save the waiting songs in FIFO order and check the whole file before replacing the active session. |
+### What design change would make the next feature cheaper?
+Refactoring the `AuxLineView` scanner prompts into a centralized, robust `InputHandler` class would make adding new console features (like search or user profiles) much cheaper and completely eliminate edge-case input crashes across the board.
 
 ### What doesn't work yet?
-
-- Play/Pause, Seek, Like, and requester names are still missing.
-- The field and queue limits are still missing. Closing input in the middle of Add Song can crash the console.
-- The three standalone test programs currently fail. One expects an older prompt, one expects the controller to return `null` before a song starts, and one hits the Add Song input crash while using the older menu flow.
+- Play/Pause, Seek, and requester names are still missing.
+- The 100-character field limit and the 100-request queue limit are still missing. 
+- The three standalone test programs currently fail because they expect older prompts and controller behaviors.
 
 ---
 
 ## Next Steps
 
 ### What's left to finish the MVP (in order)
-
-1. Fix the Add Song crash when input ends, handle Now Playing before a song starts, and update the console tests.
+1. Fix the standalone console tests to match the new View prompts and Controller null-handling.
 2. Add requester names and enforce the 100-character and 100-request limits.
-3. Add simulated Play/Pause, Seek, and Like. Use Play Next as the skip action.
-
-### Change feature
-
-**Save and restore the session.** The host can save the current song and waiting requests, close AuxLine, and load the same lineup later. If the file is missing or damaged, the app should show an error and keep the active lineup.
-
-| Class | Expected to change? | Why |
-|---|---|---|
-| `Song` | No | We expect to save and restore the song fields available when the feature is added. |
-| `Node<E>` | No | A node still stores an entry and a link to the next node. |
-| `SongQueue<E>` | No | We can rebuild the waiting list by enqueuing the saved songs in order. |
-| `AuxLineModel` | Yes | Add `snapshotSession()` and `restoreSession(...)` to capture and restore the current song and waiting list. |
-| `AuxLineController` | Yes | Add `saveSession(...)` and `loadSession(...)` to handle the file and call the model. |
-| `AuxLineView` | Yes | Update `displayMenu()` and `main()` to handle Save and Load and show the result. |
+3. Add simulated Play/Pause and Seek. Use Play Next as the skip action.
 
 ### Stretch goals
+- **Committed to:** Save and restore the session (our original D3 idea, which we will now push to the final build).
+- **Dropped:** Session history with request counts, Rating system, and Multi-user shared queue over a server.
 
-| Stretch goal (from Scope) | Decision |
-|---|---|
-| Save and restore the current song and waiting requests | Attempt as our change feature |
-| Session history with request counts per person and repeat-song counts | Drop for Deliverable 4 |
-| Rating system after each song | Drop for Deliverable 4 |
-| Multi-user shared queue over a server | Drop for Deliverable 4 |
-
-### New tests needed
-
-- Try blank and oversized fields, invalid durations, and closing input during Add Song. Verify that request 100 is accepted and request 101 leaves the queue unchanged.
-- Test Play/Pause, Seek, and Like with and without a current song. Try seeking within the duration and past the end of the song.
-- Test `snapshotSession()` and `restoreSession(...)` with an empty session and with a current song and multiple waiting songs. Verify that Play Next follows the original request order after loading.
-- Test Save and Load through the console with a valid file. Try an invalid save path and a missing or damaged load file. Check that the app shows an error and keeps the active lineup.
+### 3-Minute Demo Path
+- **(0:00 - 0:45) Validation & Add:** Start the app. Attempt to add a song with a blank title and a negative duration to prove bad input survives. Successfully add 3 songs.
+- **(0:45 - 1:15) Queue Order:** View the queue to show FIFO order is maintained.
+- **(1:15 - 1:45) Playback:** Select Play Next twice to demonstrate the Model advancing the lineup. 
+- **(1:45 - 2:45) New Change Feature (Like):** Like the current playing song. Attempt to like it a second time to show error handling. View the Liked menu to show the song was saved to the separate liked list. Unlike the song. 
+- **(2:45 - 3:00):** Exit the app gracefully.
 
 ### Who does what
-
 | Item | Proposed owner |
 |---|---|
-| Fix the Add Song and Now Playing edge cases and update the console tests | Oscar Chen |
+| Fix the standalone console tests and handle Now Playing before a song starts | Oscar Chen |
 | Add requester names and enforce the input and queue limits | Jiho Oh |
 | Add and test the simulated playback controls | Nolan Ayodeji |
-| Add and test Save and Restore | Enoch Shum |
+| Add and test Save and Restore for the final build | Enoch Shum |
 
 ---
 
