@@ -31,6 +31,9 @@ public class AuxLineView {
                     viewQueue();
                     break;
                 case "5":
+                    viewLiked();
+                    break;
+                case "6":
                     on = false;
                     System.out.println("Goodbye!");
                     break;
@@ -54,7 +57,8 @@ public class AuxLineView {
         System.out.println("2. Add a song to queue");
         System.out.println("3. Play next song in queue");
         System.out.println("4. View queue");
-        System.out.println("5. Exit");
+        System.out.println("5. View Liked");
+        System.out.println("6. Exit");
     }
     
     private static String readUserInput() {
@@ -144,6 +148,42 @@ public class AuxLineView {
         song = controller.getCurrentSong();
         System.out.println("Now playing: " + song.getTitle() + " by "
             + song.getArtist() + " (" + song.getDurationInSec() + " seconds)");
+        System.out.print("Liked: ");
+        boolean promptStatus = false;
+        if (song.getLike() == false) {
+            System.out.println("🤍");
+            while (promptStatus == false) {
+                String input = prompt("Add this song to Liked? (y/n): ");
+                switch (input) {
+                    case "y":
+                        controller.likeSong(song, true);
+                        promptStatus = true;
+                        break;
+                    case "n":
+                        promptStatus = true;
+                        break;
+                    default:
+                        System.out.println("Please enter valid value (y for yes, add / n for no");
+                }
+            }
+        }
+        else if (song.getLike() == true) {
+            System.out.println("🖤");
+            while (promptStatus == false) {
+                String input = prompt("Remove this song from Liked? (y/n): ");
+                switch (input) {
+                    case "y":
+                        controller.likeSong(song, false);
+                        promptStatus = true;
+                        break;
+                    case "n":
+                        promptStatus = true;
+                        break;
+                    default:
+                        System.out.println("Please enter valid value (y for yes, remove / n for no");
+                }
+            }
+        }
     }
 
     private static void viewQueue() {
@@ -155,6 +195,27 @@ public class AuxLineView {
         System.out.println("Queued songs:");
         for (int i = 0; i < songs.size(); i++) {
             Song song = songs.get(i);
+            System.out.print((i + 1) + ". " + song.getTitle() + " by "
+                + song.getArtist() + " (" + song.getDurationInSec()
+                + " seconds)   ");
+            if (song.getLike() == true) {
+                System.out.println("🖤");
+            }
+            else if (song.getLike() == false) {
+                System.out.println("🤍");
+            }
+        }
+    }
+    
+    private static void viewLiked() {
+        List<Song> liked = controller.getLikedSongs();
+        if (liked.isEmpty()) {
+            System.out.println("Liked is empty. Like a song first.");
+            return;
+        }
+        System.out.println("Your Liked songs:");
+        for (int i = 0; i < liked.size(); i++) {
+            Song song = liked.get(i);
             System.out.println((i + 1) + ". " + song.getTitle() + " by "
                 + song.getArtist() + " (" + song.getDurationInSec()
                 + " seconds)");

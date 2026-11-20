@@ -139,4 +139,21 @@ public class Song {
     public boolean getLike() {
         return this.like;
     }
+    
+
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+        if (other == this) {
+            return true;
+        }
+        if (other.getClass() == this.getClass()) {
+            Song otherSong = (Song) other;
+            return (otherSong.getTitle().equals(this.title)
+                && otherSong.getArtist().equals(this.artist)
+                && otherSong.getDurationInSec() == this.durationInSec);
+        }
+        return false;
+    }
 }
